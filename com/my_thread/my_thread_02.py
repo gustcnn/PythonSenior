@@ -5,7 +5,10 @@ import threading
 from time import sleep
 
 
-class MyThread(Thread):
+class MyThread(object):
+    """
+    threading.Thread(target=self.sing)
+    """
     def __init__(self):
         super().__init__()
 
@@ -20,13 +23,21 @@ class MyThread(Thread):
             sleep(1)
 
     def main(self):
-        t1 = threading.Thread(target=self.sing)
+        #创建线程对象
+        t1 = threading.Thread(target=self.sing)#指定函数名
         t1.setName("张三")
         t2 = threading.Thread(target=self.dance)
         t2.setName("李四")
+        #启动线程
         t1.start()
         t2.start()
 
+        while True:
+            count=threading.enumerate()
+            print(count)
+            print("当前运行的线程数:%d"%len(count))
+            if len(count)<=1:
+                break
 
 if __name__ == "__main__":
     my_thread = MyThread()
@@ -40,5 +51,5 @@ if __name__ == "__main__":
     # t2.start()
     my_thread.main()
     # 当前运行线程数
-    thread_count = len(threading.enumerate())
-    print("当前运行的线程数:%d" % thread_count)
+    # thread_count = len(threading.enumerate())
+    # print("当前运行的线程数:%d" % thread_count)
