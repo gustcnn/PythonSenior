@@ -7,7 +7,6 @@ from multiprocessing import Pool
 def copy_file(src_path, dest_path):
     """拷贝文件"""
     if os.path.exists(src_path):
-        #print("文件夹存在")
         #获取文件夹在的列表
         list_dir=os.listdir(src_path)
         #判断目的文件夹是否存在,不存在创建
@@ -17,7 +16,6 @@ def copy_file(src_path, dest_path):
         for dir in list_dir:
             #判断是否是文件
             if os.path.isfile(dir):
-                #print("文件")
                 #os.path.basename获得文件名
                 print(os.path.basename(dir))
                 src_file=open(dir,"r",encoding="utf8")
