@@ -18,11 +18,19 @@ class Classmate(object):
 
 
 class ClassmateIterator(object):
-    def __iter__(self,obj):
+    def __init__(self,obj):
         self.obj=obj
+        self.current_num=0
+    def __iter__(self):
+        pass
 
     def __next__(self):
-        pass
+        if self.current_num<len(self.obj.names):
+            ret=self.obj.names[self.current_num]
+            self.current_num+=1
+            return ret
+        else:
+            raise StopIteration
 
 
 if __name__ == '__main__':
@@ -31,5 +39,5 @@ if __name__ == '__main__':
     classmate.add("lbj")
     classmate.add("allen")
     print("验证classmate对象是否是可迭代的:", isinstance(classmate, Iterable))
-    for name in classmate.names:
+    for name in classmate:
         print(name)
