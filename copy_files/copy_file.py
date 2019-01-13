@@ -1,8 +1,6 @@
 # --*--coding:utf-8
 # Author:cnn
-# 多进程文件夹拷贝
 import os
-from multiprocessing import Pool
 
 def copy_file(src_path, dest_path):
     """拷贝文件"""
