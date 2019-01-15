@@ -28,7 +28,8 @@ class WebServer(object):
         # print(recv_data_list)
         if len(recv_data_list) != 0:
             recv_data_get = recv_data_list[0]
-            re_html = r"[^/]+(/[^ ]*)"
+            #re_html = r"[^/]+(/[^ ]*)"
+            re_html=r"[\w ]*(/[^ ]*)"
             re_html_result = re.match(re_html, recv_data_get)
             file_name = None
             # 判断正则匹配结果,匹配到了,获得匹配的值,如果浏览器输入/则默认返回index.html
