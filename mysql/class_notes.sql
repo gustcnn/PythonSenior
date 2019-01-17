@@ -73,5 +73,6 @@
 
   --删除一张表
   drop  table students;
-  --查看创建表的消息
+  --查看创建表的信息
   show create table students;
+
