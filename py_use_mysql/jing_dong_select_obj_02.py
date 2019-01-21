@@ -8,41 +8,50 @@ import sys
 
 class JD(object):
     def __init__(self, h, p, u, passwd):
-        #创建连接
+        # 创建连接
         self.conn = pymysql.connect(host=h, port=p, user=u, password=passwd, database="jing_dong", charset="utf8")
-        #获得游标
+        # 获得游标
         self.cursor = self.conn.cursor()
+
+    def execute_sql(self, sql):
+        self.cursor.execute(sql)
+        for result in self.cursor.fetchall():
+            print(result)
 
     def show_all_items(self):
         """显示所有数据"""
         sql_str = "select * from goods_update"
-        count = self.cursor.execute(sql_str)
-        for result in self.cursor.fetchall():
-            print(result)
+        self.execute_sql(sql_str)
 
     def show_goods_cates(self):
         """显示商品对应的分类"""
         sql_str = "select g.id,c.name from goods_update as g " \
                   "inner join goods_cates as c" \
                   " on c.id=g.cate_id group by c.name order by id;"
-        self.cursor.execute(sql_str)
-        for cate in self.cursor.fetchall():
-            print(cate)
+        self.execute_sql(sql_str)
 
     def show_goods_brands(self):
         """显示商品对应的品牌"""
         sql_str = "select g.id,b.name from goods_update as g " \
                   "inner join goods_brands as b " \
                   "on g.brand_id=b.id group by b.name order by g.id;"
-        self.cursor.execute(sql_str)
-        for brand in self.cursor.fetchall():
-            print(brand)
+        self.execute_sql(sql_str)
+
+    # def print_menu(self):
+    #     print("1.所有的商品\r\n2.对应的商品的分类\r\n3.对应的商品品牌分类\r\n")
+    #     input_result = input("请输入要查询的内容>>>:")
+    #     return input_result
+    @staticmethod
+    def print_menu():
+        """静态方法,打印菜单"""
+        print("1.所有的商品\r\n2.对应的商品的分类\r\n3.对应的商品品牌分类\r\n")
+        input_result = input("请输入要查询的内容>>>:")
+        return input_result
 
     def run(self):
         """"""
         while True:
-            print("1.所有的商品\r\n2.对应的商品的分类\r\n3.对应的商品品牌分类\r\n")
-            input_result = input("请输入要查询的内容>>>:")
+            input_result = self.print_menu()
             sql_str = ""
             if input_result == "1":
                 self.show_all_items()
@@ -56,22 +65,14 @@ class JD(object):
             else:
                 print("输入错误,请重新输入.")
 
-    # def stop(self):
-    #     """关闭连接"""
-    #     if self.cursor is not None:
-    #         self.cursor.close()
-    #     if self.conn is not None:
-    #         self.conn.close()
     def __del__(self):
-        """关闭游标"""
-        if self.cursor is not None:
-            self.cursor.close()
-        if self.conn is not None:
-            self.conn.close()
+        """销毁对象的时候会关闭游标,关闭连接"""
+        self.cursor.close()
+        self.conn.close()
+
     def main(self):
         """做为接口"""
         self.run()
-        #self.stop()
 
 
 if __name__ == '__main__':
