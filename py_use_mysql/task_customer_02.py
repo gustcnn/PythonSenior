@@ -3,7 +3,7 @@
 import pymysql
 import sys
 import re
-
+from py_use_mysql.task_order import *
 
 class Customer(object):
     """顾客类"""
@@ -16,6 +16,7 @@ class Customer(object):
         self.conn = pymysql.connect(host=Customer.h, port=Customer.p, user=Customer.u,
                                     password=Customer.pwd, database="jing_dong", charset="utf8")
         self.cursor = self.conn.cursor()
+        self.order=Order()
 
     def execute_sql(self, sql, param):
         """执行sql语句"""
@@ -27,7 +28,6 @@ class Customer(object):
             num = self.cursor.execute(sql, param)
             self.conn.commit()
         return num
-
 
     def register(self):
         """用户注册"""
@@ -66,6 +66,33 @@ class Customer(object):
         self.execute_sql(sql, param_list)
         print("用户%s注册成功." % user_name)
 
+    def get_login_user_id(self, user_name):
+        """
+        获得登录用户id
+        :param user_name: 登录用户名
+        :return:
+        """
+        sql = "select id from customers where name=%s"
+        login_user_list = list()
+        login_user_id = None
+        login_user_list.append(user_name)
+        count = self.execute_sql(sql, login_user_list)
+        print("login user 数量", count)
+        # 获得登录用户的id
+        for user_id in self.cursor.fetchone():
+            login_user_id = user_id
+        print(login_user_id)
+        print(user_name)
+        return login_user_id
+
+    def show_all_goods(self):
+        """显示所有商品"""
+        print("商品列表:")
+        sql = "select *from goods_update"
+        self.execute_sql(sql,[])
+        for good in self.cursor.fetchall():
+            print(good)
+
     def login(self):
         """用户登录"""
         param_list = list()
@@ -80,8 +107,10 @@ class Customer(object):
             # self.register()
         else:
             print("欢迎登录京东商城.")
-            sql = "select *from goods_update"
-            self.execute_sql(sql)
+            id=self.get_login_user_id(user_name)
+            self.show_all_goods()
+            self.order.buy_goods(id)
+
 
     @staticmethod
     def print_menu():
